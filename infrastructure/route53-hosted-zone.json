@@ -1,0 +1,18 @@
+{
+  "Name": "kraetzig-cloud.com.br",
+  "CallerReference": "tennis-court-2024-10-24",
+  "HostedZoneConfig": {
+    "Comment": "Hosted zone for Tennis Court AI Detector project",
+    "PrivateZone": false
+  },
+  "Tags": [
+    {
+      "Key": "Project",
+      "Value": "TennisCourtClassifier"
+    },
+    {
+      "Key": "Environment",
+      "Value": "Production"
+    }
+  ]
+}

@@ -1,0 +1,23 @@
+{
+  "DomainName": "tennis-court.kraetzig-cloud.com.br",
+  "SubjectAlternativeNames": [
+    "*.kraetzig-cloud.com.br"
+  ],
+  "ValidationMethod": "DNS",
+  "DomainValidationOptions": [
+    {
+      "DomainName": "tennis-court.kraetzig-cloud.com.br",
+      "HostedZoneId": "Z1234567890ABC"
+    }
+  ],
+  "Tags": [
+    {
+      "Key": "Project",
+      "Value": "TennisCourtClassifier"
+    },
+    {
+      "Key": "Environment",
+      "Value": "Production"
+    }
+  ]
+}

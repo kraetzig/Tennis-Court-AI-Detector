@@ -1,0 +1,39 @@
+{
+  "CallerReference": "tennis-court-custom-domain-2024",
+  "Aliases": {
+    "Quantity": 1,
+    "Items": ["tennis-court.kraetzig-cloud.com.br"]
+  },
+  "DefaultRootObject": "index.html",
+  "Comment": "Tennis Court AI Detector with custom domain",
+  "Enabled": true,
+  "Origins": {
+    "Quantity": 1,
+    "Items": [
+      {
+        "Id": "S3-tennis-court-frontend",
+        "DomainName": "tennis-court-frontend-bucket.s3.amazonaws.com",
+        "S3OriginConfig": {
+          "OriginAccessIdentity": ""
+        }
+      }
+    ]
+  },
+  "DefaultCacheBehavior": {
+    "TargetOriginId": "S3-tennis-court-frontend",
+    "ViewerProtocolPolicy": "redirect-to-https",
+    "MinTTL": 0,
+    "ForwardedValues": {
+      "QueryString": false,
+      "Cookies": {
+        "Forward": "none"
+      }
+    }
+  },
+  "ViewerCertificate": {
+    "ACMCertificateArn": "arn:aws:acm:us-east-1:123456789012:certificate/12345678-1234-1234-1234-123456789012",
+    "SSLSupportMethod": "sni-only",
+    "MinimumProtocolVersion": "TLSv1.2_2021"
+  },
+  "PriceClass": "PriceClass_100"
+}
