@@ -1,0 +1,9 @@
+{
+  "app_name": "tennis-court-classifier",
+  "domain": "tennis-court.kraetzig-cloud.com.br",
+  "aws_region": "us-east-1",
+  "s3_bucket": "tennis-court-frontend-bucket",
+  "lambda_function": "tennis-court-detector",
+  "api_gateway": "tennis-court-api",
+  "cloudfront_distribution": "tennis-court-cdn"
+}
