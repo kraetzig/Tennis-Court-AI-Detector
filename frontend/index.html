@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tennis Court AI Detector</title>
+<style>
+  html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    font-family: Arial, sans-serif;
+    overflow: hidden;
+  }
+
+  body {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    text-align: center;
+    color: white;
+  }
+
+  .background-img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: fill;
+    z-index: -1;
+  }
+
+  .top-content {
+    position: relative;
+    top: 10%;
+    width: 100%;
+    padding: 0 20px;
+    text-shadow: 2px 2px 5px rgba(0,0,0,0.7);
+  }
+
+  .top-content h1 {
+    font-size: 3em;
+    margin-bottom: 20px;
+  }
+
+  .top-content p {
+    font-size: 1.2em;
+    margin-bottom: 20px;
+  }
+
+  button {
+    padding: 10px 20px;
+    font-size: 1em;
+    border: none;
+    border-radius: 8px;
+    background-color: rgba(0, 74, 173, 0.9);
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+
+  button:hover {
+    background-color: rgba(0, 115, 230, 1);
+  }
+
+  #result-container {
+    position: relative;
+    top: 15%;
+    width: 90%;
+    max-width: 800px;
+    margin: 20px auto 0 auto;
+    text-align: center;
+    color: #fff;
+    font-size: 1.1em;
+    text-shadow: 1px 1px 3px rgba(0,0,0,0.7);
+    white-space: pre-wrap;
+  }
+
+  .footer {
+    position: absolute;
+    bottom: 50px;
+    width: 100%;
+    text-align: center;
+    font-size: 1em;
+    text-shadow: 1px 1px 3px rgba(0,0,0,0.7);
+    color: #fff;
+    z-index: 1;
+  }
+
+  @media (max-width: 768px) {
+    .top-content h1 { font-size: 2em; }
+    .top-content p { font-size: 1em; }
+    button { padding: 8px 16px; font-size: 0.9em; }
+    .footer { bottom: 70px; font-size: 0.9em; }
+  }
+</style>
+</head>
+<body>
+
+  <img src="https://tennis-court-web.s3.us-east-1.amazonaws.com/fundo.jpg" class="background-img" alt="Fundo Tennis Court">
+
+  <div class="top-content">
+    <h1>🎾 Tennis Court AI Detector</h1>
+    <p>Bem-vindo ao projeto de detecção de quadras de tênis com Amazon Rekognition!</p>
+
+    <input type="file" id="fileInput" style="display:none;" accept="image/*">
+    <button onclick="document.getElementById('fileInput').click();">Enviar imagem</button>
+  </div>
+
+  <div id="result-container">
+    <pre id="result"></pre>
+  </div>
+
+  <div class="footer">AWS Solutions Architect – João Gustavo Kraetzig</div>
+
+  <script>
+    const LAMBDA_URL = 'https://3rnp9k7cwg.execute-api.us-east-1.amazonaws.com/prod/upload';
+    const fileInput = document.getElementById('fileInput');
+    const resultDiv = document.getElementById('result');
+
+    async function classificarQuadra(file) {
+        try {
+            console.log('Iniciando upload...', file.name);
+            
+            const base64 = await fileToBase64(file);
+            const imageData = base64.split(',')[1];
+            
+            console.log('Base64 gerado, tamanho:', imageData.length);
+
+            const response = await fetch(LAMBDA_URL, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    image: imageData,
+                    filename: file.name
+                })
+            });
+
+            console.log('Response status:', response.status);
+            const result = await response.json();
+            console.log('Response data:', result);
+
+            if (response.ok) {
+                return {
+                    sucesso: true,
+                    tipo: result.surface,
+                    confianca: result.confidence
+                };
+            } else {
+                throw new Error(result.erro || 'Erro na classificação');
+            }
+        } catch (error) {
+            console.error('Erro completo:', error);
+            return {
+                sucesso: false,
+                erro: error.message
+            };
+        }
+    }
+
+    function fileToBase64(file) {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = () => resolve(reader.result);
+            reader.onerror = error => reject(error);
+        });
+    }
+
+    fileInput.addEventListener('change', async () => {
+      if (!fileInput.files.length) return;
+      const file = fileInput.files[0];
+      
+      console.log('Arquivo selecionado:', file.name, file.size, 'bytes');
+      resultDiv.innerHTML = '🔄 Analisando tipo de quadra...';
+
+      const resultado = await classificarQuadra(file);
+
+      if (resultado.sucesso) {
+          const tipos = {
+              'saibro': '🟤 Saibro (Clay Court)',
+              'grama': '🟢 Grama (Grass Court)',
+              'rapida': '🔵 Rápida (Hard Court)'
+          };
+
+          resultDiv.innerHTML = `✅ Análise concluída:
+
+🎾 Tipo de Quadra: ${tipos[resultado.tipo]}
+📊 Confiança: ${resultado.confianca.toFixed(1)}%`;
+      } else {
+          resultDiv.innerHTML = `❌ Erro na classificação: ${resultado.erro}`;
+      }
+    });
+  </script>
+
+</body>
+</html>

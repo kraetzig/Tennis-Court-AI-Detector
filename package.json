@@ -1,0 +1,13 @@
+{
+  "name": "tennis-court-classifier",
+  "version": "1.0.0",
+  "description": "Tennis court surface classifier using AWS Rekognition",
+  "main": "lambda/lambda_function.py",
+  "scripts": {
+    "deploy": "./scripts/deploy_complete.sh",
+    "deploy-lambda": "./scripts/deploy_enhanced.sh"
+  },
+  "keywords": ["aws", "rekognition", "tennis", "classifier", "machine-learning"],
+  "author": "Your Name",
+  "license": "MIT"
+}

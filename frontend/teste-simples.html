@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head><title>Teste API</title></head>
+<body>
+<h1>Teste da API</h1>
+<button onclick="testar()">Testar API</button>
+<div id="resultado"></div>
+
+<script>
+async function testar() {
+    document.getElementById('resultado').innerHTML = 'Testando...';
+    
+    try {
+        const response = await fetch('https://3rnp9k7cwg.execute-api.us-east-1.amazonaws.com/prod/upload', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ image: 'test' })
+        });
+        
+        const data = await response.json();
+        document.getElementById('resultado').innerHTML = 'Resultado: ' + JSON.stringify(data);
+    } catch (error) {
+        document.getElementById('resultado').innerHTML = 'Erro: ' + error.message;
+    }
+}
+</script>
+</body>
+</html>
