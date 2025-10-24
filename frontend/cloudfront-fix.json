@@ -1,0 +1,54 @@
+{
+  "Id": "E2991UZQ5WBEC6",
+  "DistributionConfig": {
+    "CallerReference": "tennis-court-fix-" + Date.now(),
+    "Comment": "Tennis Court App with API support",
+    "Enabled": true,
+    "Origins": {
+      "Quantity": 2,
+      "Items": [
+        {
+          "Id": "tennis-court-web.s3.us-east-1.amazonaws.com-mguy9qx311q",
+          "DomainName": "tennis-court-web.s3.us-east-1.amazonaws.com",
+          "S3OriginConfig": {
+            "OriginAccessIdentity": "origin-access-identity/cloudfront/E2NM2SIOG27JNB"
+          }
+        },
+        {
+          "Id": "api-origin",
+          "DomainName": "YOUR_API_GATEWAY_DOMAIN.execute-api.us-east-1.amazonaws.com",
+          "CustomOriginConfig": {
+            "HTTPPort": 443,
+            "HTTPSPort": 443,
+            "OriginProtocolPolicy": "https-only"
+          }
+        }
+      ]
+    },
+    "DefaultCacheBehavior": {
+      "TargetOriginId": "tennis-court-web.s3.us-east-1.amazonaws.com-mguy9qx311q",
+      "ViewerProtocolPolicy": "redirect-to-https",
+      "AllowedMethods": {
+        "Quantity": 2,
+        "Items": ["GET", "HEAD"]
+      },
+      "Compress": true
+    },
+    "CacheBehaviors": {
+      "Quantity": 1,
+      "Items": [
+        {
+          "PathPattern": "/api/*",
+          "TargetOriginId": "api-origin",
+          "ViewerProtocolPolicy": "https-only",
+          "AllowedMethods": {
+            "Quantity": 7,
+            "Items": ["DELETE", "GET", "HEAD", "OPTIONS", "PATCH", "POST", "PUT"]
+          },
+          "CachePolicyId": "4135ea2d-6df8-44a3-9df3-4b5a84be39ad",
+          "OriginRequestPolicyId": "88a5eaf4-2fd4-4709-b370-b4c650ea3fcf"
+        }
+      ]
+    }
+  }
+}
